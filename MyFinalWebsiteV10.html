@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My First Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&amp;display=swap" rel="stylesheet" />
+  <style>
+    /* Reset and base */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #ffffff;
+      color: #6b7280;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    body.dark-mode {
+      background: #111827;
+      color: #d1d5db;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 4rem auto 5rem;
+      background: #ffffff;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.05);
+      text-align: center;
+      color: #6b7280;
+      padding: 2rem 2rem 3rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative;
+      z-index: 10;
+    }
+    body.dark-mode .container {
+      background: #1f2937;
+      color: #d1d5db;
+      box-shadow: 0 2px 12px rgb(0 0 0 / 0.3);
+    }
+
+    h1.typing {
+      font-size: 48px;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: inherit;
+    }
+    h1.typing::after {
+      content: '|';
+      animation: blink 1s infinite;
+      position: absolute;
+      right: -12px;
+      color: currentColor;
+      top: 0;
+      font-weight: 700;
+    }
+    @keyframes blink {
+      0%, 100% {opacity: 1;}
+      50% {opacity: 0;}
+    }
+
+    .description {
+      margin-bottom: 2rem;
+      font-weight: 300;
+      font-size: 18px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      color: inherit;
+    }
+
+    /* Navigation Buttons container */
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+    button.nav-btn {
+      background: #111827;
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 12px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgb(0 0 0 / 0.15);
+      transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      min-width: 150px;
+    }
+    button.nav-btn:hover, button.nav-btn:focus {
+      background: #374151;
+      transform: scale(1.05);
+      box-shadow: 0 8px 15px rgb(0 0 0 / 0.2);
+      outline:none;
+    }
+
+    /* Back Button style */
+    button.back-btn {
+      margin-top: 2rem;
+      font-weight: 600;
+      border-radius: 0.75rem;
+      background: #111827;
+      color: white;
+      padding: 12px 24px;
+      box-shadow: 0 3px 6px rgb(0 0 0 / 0.15);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    button.back-btn:hover, button.back-btn:focus {
+      background: #374151;
+      transform: scale(1.05);
+      outline:none;
+    }
+    button.back-btn.pulse {
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% {transform: scale(1);}
+      50% {transform: scale(1.1);}
+    }
+
+    /* Sections */
+    .section {
+      display: none;
+      background: #f9fafb;
+      border-radius: 0.75rem;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      box-shadow: 0 3px 10px rgb(0 0 0 / 0.1);
+      color: #4b5563;
+      text-align: center;
+      transition: background-color 0.3s ease,color 0.3s ease;
+      position: relative;
+      z-index: 10;
+    }
+    body.dark-mode .section {
+      background: #374151;
+      color: #d1d5db;
+      box-shadow: 0 3px 12px rgb(0 0 0 / 0.3);
+    }
+
+    /* Image styles */
+    #asal-image, #contact-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: box-shadow 0.3s ease;
+    }
+    #asal-image:hover, #contact-image:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    /* Video styling Tentang */
+    video#tentangVideo {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: box-shadow 0.3s ease;
+    }
+    video#tentangVideo:hover {
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    /* Playlist section layout */
+    #playlist {
+      display: none;
+      background: #f9fafb;
+      border-radius: 0.75rem;
+      box-shadow: 0 3px 10px rgb(0 0 0 / 0.1);
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      color: #4b5563;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      transition: background-color 0.3s ease,color 0.3s ease;
+    }
+    body.dark-mode #playlist {
+      background: #374151;
+      color: #d1d5db;
+      box-shadow: 0 3px 12px rgb(0 0 0 / 0.3);
+    }
+
+    #music-player-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      max-width: 700px;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #playlist-audio {
+      width: 100%;
+      max-width: 600px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+      outline: none;
+    }
+    #music-cover {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      cursor: default;
+      transition: box-shadow 0.3s ease;
+    }
+    #music-cover:hover {
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    #audio-info {
+      font-size: 16px;
+      font-weight: 600;
+      color: inherit;
+      margin-top: 6px;
+    }
+
+    /* Lyrics container for Playlist */
+    #lyrics-container {
+      background: #ffffff;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
+      max-width: 700px;
+      width: 100%;
+      padding: 1.5rem 2rem;
+      color: #6b7280;
+      text-align: left;
+      font-size: 16px;
+      line-height: 1.5;
+      white-space: pre-line;
+      overflow-y: auto;
+      max-height: 280px;
+      user-select: text;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    body.dark-mode #lyrics-container {
+      background: #1f2937;
+      color: #d1d5db;
+      box-shadow: 0 2px 10px rgb(0 0 0 / 0.3);
+    }
+
+    /* Dark mode toggle button */
+    #modeToggleBtn {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      background-color: #111827;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgb(0 0 0 / 0.15);
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+      z-index: 10000;
+      user-select: none;
+    }
+    #modeToggleBtn:hover {
+      background-color: #374151;
+      transform: scale(1.05);
+      box-shadow: 0 8px 15px rgb(0 0 0 / 0.2);
+    }
+    body.dark-mode #modeToggleBtn {
+      background-color: #d1d5db;
+      color: #111827;
+    }
+    body.dark-mode #modeToggleBtn:hover {
+      background-color: #9ca3af;
+      color: #111827;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      h1.typing {
+        font-size: 36px;
+      }
+      button.nav-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+        min-width: unset;
+      }
+      #modeToggleBtn {
+        font-size: 14px;
+        padding: 0.4rem 0.8rem;
+        top: 12px;
+        right: 12px;
+      }
+      .buttons {
+        flex-direction: column;
+        gap: 12px;
+      }
+      #lyrics-container {
+        max-height: 240px;
+        font-size: 14px;
+        padding: 1rem 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #playlist {
+        padding: 2rem 1rem;
+      }
+      #music-player-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      #music-cover {
+        width: 72px;
+        height: 72px;
+      }
+      #playlist-audio {
+        max-width: 100%;
+      }
+    }
+
+    /* Stars container */
+    #stars-container {
+      pointer-events: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      overflow: visible;
+      z-index: 1;
+      display: block;
+    }
+
+    /* Small twinkling stars for all modes */
+    .star {
+      position: absolute;
+      background: radial-gradient(circle, white 60%, transparent 80%);
+      border-radius: 50%;
+      opacity: 0.8;
+      animation-name: twinklemove;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+      box-shadow: 0 0 4px white, 0 0 8px white;
+      pointer-events: none;
+    }
+    @keyframes twinklemove {
+      0% {
+        opacity: 0.4;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(5px) scale(1.2);
+      }
+    }
+
+    /* Larger glowing stars only in light mode */
+    #stars-container.light-mode .glow-star {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff9c4, transparent 70%);
+      filter: blur(6px);
+      opacity: 0.6;
+      animation-name: glowPulse;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+      pointer-events: none;
+    }
+    #stars-container.light-mode .glow-star.size1 {
+      width: 20px;
+      height: 20px;
+    }
+    #stars-container.light-mode .glow-star.size2 {
+      width: 30px;
+      height: 30px;
+      animation-delay: 1.5s;
+    }
+    #stars-container.light-mode .glow-star.size3 {
+      width: 40px;
+      height: 40px;
+      animation-delay: 3s;
+    }
+    @keyframes glowPulse {
+      0% {
+        opacity: 0.5;
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 0.85;
+        transform: scale(1.1);
+      }
+    }
+
+    /* Text left-bottom on home */
+    #home-text-left-bottom {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      max-width: 320px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #6b7280;
+      user-select: none;
+      pointer-events: none;
+      font-family: 'Poppins', sans-serif;
+    }
+    body.dark-mode #home-text-left-bottom {
+      color: #d1d5db;
+    }
+  </style>
+</head>
+<body>
+  <button id="modeToggleBtn" aria-label="Toggle light/dark mode">Mode Gelap</button>
+
+  <div id="stars-container" aria-hidden="true"></div>
+
+  <main>
+    <div class="container" id="home" tabindex="-1">
+      <h1 class="typing" id="typed">My First Website</h1>
+      <p class="description">Website Ini Di Desain Dengan Waktu 2 Minggu</p>
+      <nav class="buttons" role="navigation" aria-label="Navigasi utama">
+        <button class="nav-btn" data-target="form">Kirim Pesan</button>
+        <button class="nav-btn" data-target="asal">Asal Kota</button>
+        <button class="nav-btn" data-target="contact">Contact Saya</button>
+        <button class="nav-btn" data-target="tentang">Tentang Saya</button>
+        <button class="nav-btn" data-target="playlist">PlayList</button>
+      </nav>
+      <div id="home-text-left-bottom" aria-hidden="true">
+        Gk Ranking 1 Bukan Berarti Bodoh Dalam Seluruh Mata Pelajaran.
+      </div>
+    </div>
+
+    <section class="container section" id="asal" role="region" aria-label="Asal Kota" tabindex="-1">
+      <img id="asal-image" src="https://files.catbox.moe/1k185l.jpg" alt="Gambar Asal Kota" />
+      <h2>Data Pribadi</h2>
+      <p>Tanggal Lahir: 2 Maret 2012</p>
+      <p>Asal Kota: Bandung</p>
+      <p>Sekolah: SMP NEGERI 2 CILEUNYI</p>
+      <p>Umur: 12</p>
+      <p>Hobi: Coding, Game</p>
+      <button class="back-btn pulse">Kembali</button>
+    </section>
+
+    <section class="container section" id="contact" role="region" aria-label="Contact Saya" tabindex="-1">
+      <img id="contact-image" src="https://files.catbox.moe/54m81u.jpg" alt="Gambar Contact Saya" />
+      <h2>Contact Saya</h2>
+      <button class="nav-btn" onclick="openInNewTab('https://www.instagram.com/_1411xv?igsh=MW01b3RoZGxvN2w2ZA==')">Instagram</button>
+      <button class="nav-btn" onclick="openInNewTab('https://www.tiktok.com/@shadowyui?_t=ZS-8x3vJ8L5FA1&_r=1')">Tiktok Saya</button>
+      <button class="back-btn pulse">Kembali</button>
+    </section>
+
+    <section class="container section" id="tentang" role="region" aria-label="Tentang Saya" tabindex="-1">
+      <h2>Tentang Saya</h2>
+      <video id="tentangVideo" autoplay loop muted playsinline title="Video Tentang Saya" tabindex="0">
+        <source src="https://files.catbox.moe/8qgcvp.mp4" type="video/mp4" />
+        Browser Anda tidak mendukung pemutaran video.
+      </video>
+      <br />
+      <button id="playPauseBtn" class="nav-btn">Putar/Jeda</button>
+      <p class="tentang-text">
+        Saya seorang pelajar yang hobi ngoding dan ingin menjadi programmer.
+      </p>
+      <button class="back-btn pulse">Kembali</button>
+    </section>
+
+    <section class="container section" id="form" role="region" aria-label="Kirim Pesan" tabindex="-1">
+      <h2>Kirim Pesan</h2>
+      <form action="https://formspree.io/f/mwpblbgv" method="POST">
+        <input type="text" name="Nama" placeholder="Nama Anda" required style="padding:10px;width:80%;margin:10px" /><br />
+        <input type="email" name="Email" placeholder="Email Anda" required style="padding:10px;width:80%;margin:10px" /><br />
+        <textarea name="Pesan" placeholder="Tulis pesan anda di sini..." rows="6" required style="padding:10px;width:80%;margin:10px"></textarea><br />
+        <button type="submit" class="nav-btn" onclick="playClick()">
+          Kirim
+        </button>
+        <br /><br />
+        <p style="font-size:14px;color:#6b7280;">
+          Pesan akan langsung terkirim ke email kamu melalui Formspree.
+        </p>
+        <button class="back-btn pulse">Kembali</button>
+      </form>
+    </section>
+
+    <section class="container section" id="playlist" role="region" aria-label="Playlist" tabindex="-1">
+      <h2>My Fav Song</h2>
+      <div id="music-player-container" aria-label="Pemutar musik dan info lagu">
+        <audio id="playlist-audio" controls preload="metadata" title="Night Changes •FOUR - Music Player" aria-label="Pemutar musik Playlist">
+          <source src="https://files.catbox.moe/p94ph6.mp3" type="audio/mpeg" />
+          Browser Anda tidak mendukung pemutar audio.
+        </audio>
+        <img id="music-cover" src="https://files.catbox.moe/j0024r.jpg" alt="Cover Night Changes •FOUR" width="96" height="96" aria-hidden="true" />
+      </div>
+      <div id="audio-info" aria-live="polite" aria-atomic="true">Panjang Lagu: <span id="duration">Memuat...</span></div>
+      <div id="lyrics-container" tabindex="0" aria-label="Lirik lagu Night Changes">
+        Goin' out tonight, changes into something red
+        Her mother doesn't like that kind of dress
+        Everything she never had she's showin' off
+        Drivin' too fast, moon is breakin' through her hair
+        She's headin' for somethin' that she won't forget
+        Havin' no regrets is all that she really wants
+        We're only gettin' older, baby
+        And I've been thinkin' about it lately
+        Does it ever drive you crazy
+        Just how fast the night changes?
+        Everything that you've ever dreamed of
+        Disappearing when you wake up
+        But there's nothing to be afraid of
+        Even when the night changes
+        It will never change me and you
+        Chasing it tonight, doubts are runnin' 'round her head
+        He's waitin', hides behind a cigarette
+        Heart is beatin' loud and she doesn't want it to stop
+        Movin' too fast, moon is lightin' up her skin
+        She's fallin', doesn't even know it yet
+        Havin' no regrets is all that she really wants
+        We're only gettin' older, baby
+        And I've been thinkin' about it lately
+        Does it ever drive you crazy
+        Just how fast the night changes?
+        Everything that you've ever dreamed of
+        Disappearing when you wake up
+        But there's nothing to be afraid of
+        Even when the night changes
+        It will never change me and you
+        Goin' out tonight, changes into something red
+        Her mother doesn't like that kind of dress
+        Reminds her of the missin' piece of innocence she lost
+        We're only gettin' older, baby
+        And I've been thinkin' about it lately
+        Does it ever drive you crazy
+        Just how fast the night changes?
+        Everything that you've ever dreamed of
+        Disappearing when you wake up
+        But there's nothing to be afraid of
+        Even when the night changes
+        It will never change, baby
+        It will never change, baby
+        It will never change me and you
+      </div>
+      <button class="back-btn pulse">Kembali</button>
+    </section>
+  </main>
+
+  <!-- Audio element for click sound -->
+  <audio id="clickSound" preload="auto" src="https://www.myinstants.com/media/sounds/minecraft_click.mp3"></audio>
+
+  <script>
+    // Typing effect
+    const typedText = "My First Website";
+    let i = 0;
+    const typingElement = document.getElementById("typed");
+    function typeEffect() {
+      if (i < typedText.length) {
+        typingElement.innerText = typedText.slice(0, i + 1);
+        i++;
+        setTimeout(typeEffect, 150);
+      }
+    }
+
+    // Generate stars: small stars always, glowing stars only light mode
+    function generateStars() {
+      const container = document.getElementById('stars-container');
+      container.innerHTML = '';
+
+      const starCount = 100;
+      for(let i=0; i<starCount; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        const size = 2 + Math.random() * 6;
+        star.style.width = star.style.height = size + 'px';
+        star.style.left = (Math.random() * window.innerWidth) + 'px';
+        star.style.top = (Math.random() * window.innerHeight) + 'px';
+        star.style.animationDelay = (Math.random() * 5).toFixed(2) + 's';
+        container.appendChild(star);
+      }
+
+      // Glowing stars only in light mode
+      if(!document.body.classList.contains('dark-mode')){
+        const glowCount = 15;
+        const glowSizes = [20, 30, 40];
+        for(let i=0; i < glowCount; i++){
+          const glowStar = document.createElement('div');
+          glowStar.classList.add('glow-star');
+          const size = glowSizes[Math.floor(Math.random()*glowSizes.length)];
+          glowStar.classList.add('size' + (size / 10)); // to match CSS classes size1, size2, size3
+          glowStar.style.left = (Math.random() * window.innerWidth) + 'px';
+          glowStar.style.top = (Math.random() * window.innerHeight) + 'px';
+          glowStar.style.animationDelay = (Math.random() * 6).toFixed(2) + 's';
+          container.appendChild(glowStar);
+        }
+        container.classList.add('light-mode');
+      } else {
+        container.classList.remove('light-mode');
+      }
+    }
+
+    // Play click sound
+    const clickSound = document.getElementById("clickSound");
+    function playClick() {
+      if(clickSound){
+        clickSound.currentTime = 0;
+        clickSound.play();
+      }
+    }
+
+    // Show/hide sections and manage focus
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.style.display = 'none';
+        section.setAttribute('aria-hidden', 'true');
+      });
+      document.getElementById('home').style.display = 'none';
+      document.getElementById('home').setAttribute('aria-hidden', 'true');
+
+      if(id === 'home') {
+        const home = document.getElementById('home');
+        home.style.display = 'block';
+        home.removeAttribute('aria-hidden');
+        home.focus();
+        pauseTentangVideo();
+        mutePlaylistAudio();
+        return;
+      }
+      const target = document.getElementById(id);
+      if(target){
+        target.style.display = 'block';
+        target.removeAttribute('aria-hidden');
+        target.focus();
+      }
+
+      if(id === 'tentang'){
+        unmutePlayTentangVideo();
+        mutePlaylistAudio();
+      } else if(id === 'playlist'){
+        muteTentangVideo();
+        unmutePlaylistAudio();
+      } else {
+        muteTentangVideo();
+        mutePlaylistAudio();
+      }
+    }
+
+    // Video control functions
+    function pauseTentangVideo(){
+      const video = document.getElementById('tentangVideo');
+      if(video){
+        video.pause();
+        video.muted = true;
+      }
+    }
+    function unmutePlayTentangVideo(){
+      const video = document.getElementById('tentangVideo');
+      if(video){
+        video.muted = false;
+        video.play();
+      }
+    }
+    function muteTentangVideo(){
+      const video = document.getElementById('tentangVideo');
+      if(video){
+        video.muted = true;
+        video.pause();
+      }
+    }
+
+    // Audio control functions
+    function mutePlaylistAudio(){
+      const audio = document.getElementById('playlist-audio');
+      if(audio){
+        audio.muted = true;
+      }
+    }
+    function unmutePlaylistAudio(){
+      const audio = document.getElementById('playlist-audio');
+      if(audio){
+        audio.muted = false;
+      }
+    }
+
+    // Setup song duration display
+    function setupAudioDuration() {
+      const audio = document.getElementById('playlist-audio');
+      const durationLabel = document.getElementById('duration');
+      if(!audio || !durationLabel) return;
+      audio.addEventListener('loadedmetadata', () => {
+        const totalSeconds = Math.floor(audio.duration);
+        const minutes = Math.floor(totalSeconds/60);
+        const seconds = totalSeconds % 60;
+        durationLabel.textContent = minutes + ':' + seconds.toString().padStart(2,'0');
+      });
+      if(audio.readyState >= 1){
+        const totalSeconds = Math.floor(audio.duration);
+        const minutes = Math.floor(totalSeconds/60);
+        const seconds = totalSeconds % 60;
+        durationLabel.textContent = minutes + ':' + seconds.toString().padStart(2,'0');
+      }
+    }
+
+    // Setup event listeners for buttons
+    function setupEventListeners(){
+      document.querySelectorAll('button.nav-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          playClick();
+          const target = button.getAttribute('data-target');
+          if(target) showSection(target);
+        });
+      });
+
+      document.querySelectorAll('button.back-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          playClick();
+          showSection('home');
+        });
+      });
+
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      if(playPauseBtn){
+        playPauseBtn.addEventListener('click', () => {
+          playClick();
+          const video = document.getElementById('tentangVideo');
+          if(!video) return;
+          if(video.paused){
+            video.play();
+            video.muted = false;
+          } else {
+            video.pause();
+          }
+        });
+      }
+    }
+
+    // Open external links with click sound
+    function openInNewTab(url){
+      playClick();
+      window.open(url, '_blank');
+    }
+
+    // Mode toggle and regenerate stars accordingly
+    const modeToggleBtn = document.getElementById('modeToggleBtn');
+    function updateModeButtonText(){
+      if(document.body.classList.contains('dark-mode')){
+        modeToggleBtn.textContent = 'Mode Terang';
+      } else {
+        modeToggleBtn.textContent = 'Mode Gelap';
+      }
+    }
+    modeToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      updateModeButtonText();
+      generateStars();
+    });
+    updateModeButtonText();
+
+    // Update stars on window resize
+    window.addEventListener('resize', () => {
+      generateStars();
+    });
+
+    // Initial setup on window load
+    window.onload = () => {
+      typeEffect();
+      generateStars();
+      setupAudioDuration();
+      showSection('home');
+      setupEventListeners();
+    };
+  </script>
+</body>
+</html>
