@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Exam AI — Neo Assistant</title>
+  <meta name="theme-color" content="#0b1022" />
+  <style>
+    :root{
+      --bg:#0b1022;         /* deep space */
+      --bg-2:#0a0f26;
+      --card:#0e1533;       /* glass base */
+      --edge:#1b2559;       /* subtle border */
+      --txt:#e6ecff;        /* main text */
+      --muted:#9fb0ff;      /* secondary */
+      --accent:#7c5cff;     /* neon violet */
+      --accent-2:#00d1ff;   /* neon cyan */
+      --danger:#ff5d7a;
+      --success:#2ee6a6;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(124,92,255,.16), transparent 40%),
+                  radial-gradient(900px 600px at 110% 110%, rgba(0,209,255,.18), transparent 40%),
+                  linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      color:var(--txt);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .safe{padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));}
+    .wrap{max-width:820px; margin:0 auto;}/* HEADER */
+header{ position:sticky; top:0; z-index:10; backdrop-filter: blur(10px) saturate(120%);
+  background: linear-gradient(180deg, rgba(14,21,51,.75), rgba(14,21,51,.35)); border-bottom:1px solid rgba(255,255,255,.06);}
+.topbar{display:flex; align-items:center; gap:12px}
+.logo{width:42px; height:42px; border-radius:12px; display:grid; place-items:center; background:
+      conic-gradient(from 60deg, var(--accent), var(--accent-2)); color:white; font-weight:800; box-shadow:0 8px 22px rgba(124,92,255,.22)}
+.title{font-size:18px; font-weight:700; letter-spacing:.2px}
+.beta{margin-left:auto; font-size:12px; color:var(--muted); padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.08)}
+
+/* CARD */
+.card{ background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.06);
+  border-radius:16px; box-shadow: var(--shadow);}
+
+/* CHAT AREA */
+.panel{ padding:16px; display:grid; gap:12px }
+.status{ display:flex; align-items:center; gap:8px; color:var(--muted); font-size:13px }
+.dot{ width:8px; height:8px; border-radius:999px; background:var(--success); box-shadow:0 0 20px var(--success) }
+
+.messages{ display:flex; flex-direction:column; gap:10px; max-height:52vh; overflow:auto; padding-right:6px }
+.bubble{ padding:12px 14px; border-radius:14px; line-height:1.45; word-wrap:break-word; white-space:pre-wrap }
+.me{ align-self:flex-end; background: linear-gradient(135deg, rgba(124,92,255,.25), rgba(0,209,255,.25)); border:1px solid rgba(124,92,255,.35) }
+.bot{ align-self:flex-start; background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06) }
+
+/* INPUT BAR */
+.inputbar{ display:flex; gap:10px; align-items:flex-end }
+textarea{ flex:1; min-height:56px; max-height:160px; resize:vertical; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:#0b1638; color:var(--txt); font-size:15px }
+.btn{ border:0; border-radius:12px; padding:12px 14px; font-weight:700; cursor:pointer; color:#0a0f26; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 10px 24px rgba(124,92,255,.25) }
+.btn:active{ transform: translateY(1px) }
+
+/* TOOLBAR */
+.toolbar{ display:flex; gap:8px; flex-wrap:wrap }
+.tbtn{ font-size:12px; padding:8px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.08); color:var(--muted); background:rgba(255,255,255,.02); cursor:pointer }
+.tbtn:hover{ border-color: rgba(255,255,255,.2); color:var(--txt) }
+
+.hint{ font-size:12px; color:var(--muted) }
+
+/* TOAST */
+.toast{ position:fixed; left:50%; transform:translateX(-50%); bottom: max(14px, env(safe-area-inset-bottom)); background: rgba(15,23,42,.9);
+  color:var(--txt); padding:10px 14px; border:1px solid rgba(255,255,255,.08); border-radius:12px; display:none }
+
+/* LOADER */
+.loader{ display:inline-block; width:20px; height:20px; border-radius:50%; border:2px solid rgba(255,255,255,.25); border-top-color: var(--accent); animation:spin 1s linear infinite; }
+@keyframes spin{ to{ transform: rotate(360deg) } }
+
+/* COPY BUTTON */
+.copy{
+  margin-left:auto; display:inline-flex; gap:6px; align-items:center; font-size:12px; color:var(--muted);
+  border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.02); padding:6px 8px; border-radius:999px; cursor:pointer
+}
+
+/* MOBILE TWEAKS */
+@media (min-width:720px){ .panel{ padding:22px } .messages{ max-height:58vh } }
+
+  </style>
+</head>
+<body>
+  <header class="safe">
+    <div class="wrap topbar">
+      <div class="logo">EX</div>
+      <div class="title">Exam AI — Neo Assistant</div>
+      <div class="beta">Mobile • v1.2</div>
+    </div>
+  </header>  <main class="safe">
+    <div class="wrap card">
+      <section class="panel" aria-label="Chat">
+        <div class="status"><span class="dot"></span><span id="statusTxt">Online</span></div><div id="messages" class="messages" aria-live="polite">
+      <div class="bubble bot">Hi! Ask any question and I'll try to explain it clearly. Use me for studying — not for cheating during real exams. 🙏</div>
+    </div>
+
+    <div class="toolbar">
+      <button class="tbtn" data-sample="Explain photosynthesis in simple terms.">Photosynthesis</button>
+      <button class="tbtn" data-sample="Solve: 2x + 5 = 19. Show steps.">Linear Equation</button>
+      <button class="tbtn" data-sample="Summarize World War II in 5 bullet points.">WWII Summary</button>
+      <button class="tbtn" data-sample="Translate this to English: \"Hukum Newton pertama\" and explain.">Translate+Explain</button>
+    </div>
+
+    <div class="inputbar">
+      <textarea id="question" placeholder="Type your question…" autocomplete="on" autocapitalize="sentences" enterkeyhint="send"></textarea>
+      <button id="askBtn" class="btn">Ask AI</button>
+    </div>
+    <div class="hint">Tip: Long-press an answer to copy. History is saved on your device.</div>
+  </section>
+</div>
+
+  </main>  <div id="toast" class="toast">Copied!</div>  <script>
+    const API_BASE = 'https://api.siputzx.my.id/api/ai/gpt3?prompt=';
+
+    const el = {
+      messages: document.getElementById('messages'),
+      askBtn: document.getElementById('askBtn'),
+      q: document.getElementById('question'),
+      toast: document.getElementById('toast'),
+      status: document.getElementById('statusTxt'),
+    };
+
+    // --- Utilities
+    const storeKey = 'exam_ai_history_v12';
+    function saveHistory(){
+      const items = [...el.messages.querySelectorAll('.bubble')].map(b=>({
+        role: b.classList.contains('me') ? 'user':'assistant',
+        text: b.innerText
+      }));
+      try{ localStorage.setItem(storeKey, JSON.stringify(items)); }catch(e){/* ignore */}
+    }
+    function loadHistory(){
+      try{
+        const raw = localStorage.getItem(storeKey);
+        if(!raw) return;
+        const arr = JSON.parse(raw);
+        el.messages.innerHTML = '';
+        arr.forEach(m => addBubble(m.text, m.role==='user'));
+      }catch(e){/* ignore */}
+    }
+    function addBubble(text, isUser=false){
+      const div = document.createElement('div');
+      div.className = `bubble ${isUser? 'me':'bot'}`;
+      div.textContent = text;
+      // long-press copy
+      let pressTimer; let copied=false;
+      div.addEventListener('touchstart', ()=>{ pressTimer = setTimeout(()=>{ copyText(text); copied=true; }, 500); },{passive:true});
+      div.addEventListener('touchend', ()=>{ clearTimeout(pressTimer); if(!copied){ /* tap */ } copied=false; },{passive:true});
+      // desktop dblclick to copy
+      div.addEventListener('dblclick', ()=> copyText(text));
+
+      // small copy chip for bot messages
+      if(!isUser){
+        const chip = document.createElement('button');
+        chip.className = 'copy'; chip.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="2" y="2" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/></svg> Copy`;
+        chip.addEventListener('click', ()=> copyText(text));
+        div.appendChild(chip);
+      }
+
+      el.messages.appendChild(div);
+      el.messages.scrollTop = el.messages.scrollHeight;
+      saveHistory();
+      return div;
+    }
+
+    function showToast(msg='Copied!'){
+      el.toast.textContent = msg; el.toast.style.display = 'block';
+      setTimeout(()=> el.toast.style.display = 'none', 1400);
+    }
+    async function copyText(text){
+      try{ await navigator.clipboard.writeText(text); showToast('Copied'); }
+      catch{ showToast('Cannot copy'); }
+    }
+
+    function setStatus(text){ el.status.textContent = text; }
+
+    // Typing effect for nicer UX
+    async function typeText(container, fullText){
+      container.textContent = '';
+      const min = 15, max = 35; // ms per char
+      for(let i=0; i<fullText.length; i++){
+        container.textContent += fullText[i];
+        await new Promise(r=> setTimeout(r, Math.random()*(max-min)+min));
+      }
+    }
+
+    // API call with timeout
+    async function askAPI(prompt){
+      const url = API_BASE + encodeURIComponent(prompt);
+      const ctl = new AbortController();
+      const id = setTimeout(()=> ctl.abort(), 20000); // 20s timeout
+      const res = await fetch(url, { signal: ctl.signal });
+      clearTimeout(id);
+      if(!res.ok) throw new Error('Network ' + res.status);
+      // Try parse JSON first; fallback to text
+      let data, text;
+      const ct = res.headers.get('content-type')||'';
+      if(ct.includes('application/json')){
+        data = await res.json();
+        text = (data && (data.result || data.response || data.output)) || JSON.stringify(data);
+      } else {
+        text = await res.text();
+        try{ const j = JSON.parse(text); text = j.result || text; }catch{ /* keep raw */ }
+      }
+      return (text || 'No response.');
+    }
+
+    async function handleAsk(){
+      const q = el.q.value.trim();
+      if(!q){ showToast('Type a question'); el.q.focus(); return; }
+
+      // add user bubble
+      addBubble(q, true);
+      el.q.value='';
+
+      // add placeholder bot bubble
+      const placeholder = addBubble('Thinking…');
+      setStatus('Thinking…');
+
+      try{
+        const answer = await askAPI(q);
+        await typeText(placeholder, answer);
+        setStatus('Online');
+      } catch(err){
+        placeholder.textContent = 'Error: ' + (err.message || 'Request failed');
+        setStatus('Error');
+        setTimeout(()=> setStatus('Online'), 1500);
+      } finally { saveHistory(); }
+    }
+
+    // Event wiring
+    el.askBtn.addEventListener('click', handleAsk);
+    el.q.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); handleAsk(); }
+    });
+
+    // Sample fillers
+    document.querySelectorAll('.tbtn').forEach(b=>{
+      b.addEventListener('click', ()=>{ el.q.value = b.dataset.sample; el.q.focus(); });
+    });
+
+    // Load previous chat
+    loadHistory();
+
+    // Small welcome if first run
+    if(el.messages.children.length <= 1){
+      addBubble('You can ask in Indonesian or English. I will try to give concise steps and explanations.');
+    }
+  </script>  <!-- Responsible use note: do not use this during real examinations. --></body>
+</html>
